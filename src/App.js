@@ -55,7 +55,7 @@ function App() {
 
   const checkMinted = async () => {
     setLoading(true);
-    const bool = await nftcontract.methods.hasMinted(account).call();
+    const bool = await nftcontract.methods.userHasAdoptedCat(account).call();
     if(bool) {
       setMinted(true);
       fetchURI();
@@ -73,7 +73,7 @@ function App() {
       query GetNftMintedEvent($minter: Bytes!) {
         nftMinteds(where: { minter: $minter }) {
           id
-          characterId
+          catId
           minter
           blockNumber
           blockTimestamp
@@ -121,7 +121,7 @@ function App() {
 
   const fetchURI = async () => {
     setLoading(true);
-    const tokenID = await nftcontract.methods.userTokenID(account).call();
+    const tokenID = await nftcontract.methods.s_userToAdoptedCat(account).call();
     const metadataIpfsLink = await nftcontract.methods.tokenURI(tokenID).call();
     const response = await fetch(metadataIpfsLink);
     const metadata = await response.json();
@@ -158,6 +158,8 @@ function App() {
     }
     else if (metadata.name === "Usopp") {
       playUsoppSound();
+    } else {
+      alert("got to this point");
     }
   }
 
